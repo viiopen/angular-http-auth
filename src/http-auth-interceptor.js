@@ -52,8 +52,11 @@
     $httpProvider.interceptors.push(['$rootScope', '$q', 'httpBuffer', function($rootScope, $q, httpBuffer) {
       return {
         responseError: function(rejection) {
-          var config = rejection.config || {};
-          if (!config.ignoreAuthModule) {
+          var config   = rejection.config || {},
+              meta     = rejection.data.meta || {},
+              redirect = meta.redirect || '';
+
+          if (!config.ignoreAuthModule && !(/\/sso\//.test(redirect))) {
             switch (rejection.status) {
               case 401:
                 var deferred = $q.defer();
