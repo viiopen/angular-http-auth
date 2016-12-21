@@ -53,6 +53,7 @@
       return {
         responseError: function(rejection) {
           var config   = rejection.config || {},
+              data     = rejection.data || {},
               meta     = rejection.data.meta || {},
               redirect = meta.redirect || '';
 
