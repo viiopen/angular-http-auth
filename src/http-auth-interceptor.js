@@ -57,13 +57,16 @@
               meta     = data.meta || {},
               redirect = meta.redirect || '';
 
-          if (!config.ignoreAuthModule && !(/\/sso\//.test(redirect))) {
+          if (!config.ignoreAuthModule) {
             switch (rejection.status) {
               case 401:
                 var deferred = $q.defer();
                 var bufferLength = httpBuffer.append(config, deferred);
-                if (bufferLength === 1)
-                  $rootScope.$broadcast('event:auth-loginRequired', rejection);
+                if (bufferLength === 1) {
+                  if (!(/\/sso\//.test(redirect))) {
+                    $rootScope.$broadcast('event:auth-loginRequired', rejection);
+                  }
+                }
                 return deferred.promise;
               case 403:
                 $rootScope.$broadcast('event:auth-forbidden', rejection);
